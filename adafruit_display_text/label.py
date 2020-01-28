@@ -55,8 +55,9 @@ class Label(displayio.Group):
        :param str text: Text to display
        :param int max_glyphs: The largest quantity of glyphs we will display
        :param int color: Color of all text in RGB hex
+       :param str align: Set vertical alignment to "top" or "center"
        :param double line_spacing: Line spacing of text to display"""
-    def __init__(self, font, *, text=None, max_glyphs=None, color=0xffffff,
+    def __init__(self, font, *, text=None, max_glyphs=None, color=0xffffff, align=None,
                  line_spacing=1.25, **kwargs):
         if not max_glyphs and not text:
             raise RuntimeError("Please provide a max size, or initial text")
@@ -73,6 +74,7 @@ class Label(displayio.Group):
 
         bounds = self.font.get_bounding_box()
         self.height = bounds[1]
+        self._align = align
         self._line_spacing = line_spacing
         self._boundingbox = None
 
@@ -85,8 +87,11 @@ class Label(displayio.Group):
         y = 0
         i = 0
         old_c = 0
-        y_offset = int((self.font.get_glyph(ord('M')).height -
+        if self._align == 'center'
+            y_offset = int((self.font.get_glyph(ord('M')).height -
                         new_text.count('\n') * self.height * self.line_spacing) / 2)
+        else:
+            y_offset = 0
         #print("y offset from baseline", y_offset)
         left = right = top = bottom = 0
         for character in new_text:
